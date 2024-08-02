@@ -1,0 +1,37 @@
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - ./ha/config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./mqqt/config:/mosquitto/config:rw
+      - ./mqqt/data:/mosquitto/data:rw
+      - ./mqqt/log:/mosquitto/log:rw
+    restart: unless-stopped
+    network_mode: host
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0 
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /run/udev:/run/udev:ro 
+      - ./zigbee/date:/app/data
+    container_name: zigbee2mqtt
+    restart: unless-stopped
+    network_mode: host
+
+
+
+
+
